@@ -170,22 +170,25 @@ document.head.appendChild(style);
 const hero = document.querySelector('.hero');
 const heroContent = document.querySelector('.hero-content');
 
+let ticking = false;
+
 window.addEventListener('scroll', () => {
-    const scrolled = window.pageYOffset;
-    const parallaxSpeed = 0.5;
-    
-    if (heroContent && scrolled < hero.offsetHeight) {
-        heroContent.style.transform = `translateY(${scrolled * parallaxSpeed}px)`;
-        heroContent.style.opacity = 1 - (scrolled / hero.offsetHeight) * 0.8;
+    if (!ticking) {
+        window.requestAnimationFrame(() => {
+            const scrolled = window.pageYOffset;
+            const parallaxSpeed = 0.5;
+            
+            if (heroContent && scrolled < hero.offsetHeight) {
+                heroContent.style.transform = `translateY(${scrolled * parallaxSpeed}px)`;
+                heroContent.style.opacity = 1 - (scrolled / hero.offsetHeight) * 0.8;
+            }
+            ticking = false;
+        });
+        ticking = true;
     }
 });
 
-// Add interactive hover effects to product cards
-productCards.forEach(card => {
-    card.addEventListener('mouseenter', (e) => {
-        card.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
-    });
-});
+
 
 // Prevent default behavior for product links and add smooth transition
 const productLinks = document.querySelectorAll('.product-link');
@@ -201,15 +204,7 @@ productLinks.forEach(link => {
     });
 });
 
-// Add smooth reveal animation on page load
-window.addEventListener('load', () => {
-    document.body.style.opacity = '0';
-    document.body.style.transition = 'opacity 0.5s ease';
-    
-    setTimeout(() => {
-        document.body.style.opacity = '1';
-    }, 100);
-});
+
 
 // Responsive design check
 function checkViewport() {
